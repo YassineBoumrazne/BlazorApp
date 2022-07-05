@@ -1,0 +1,169 @@
+﻿@page "/"
+
+@inject HttpClient http
+
+<PageTitle>Index</PageTitle>
+
+<Card Margin="Margin.Is4.OnY" Shadow="Shadow.Small">
+    <CardBody>
+        <CardTitle Size="5">Form title</CardTitle>
+        <CardText>
+            <Validations Mode="ValidationMode.Auto" @ref="form" ValidateOnLoad="false" Model="formFields">
+                <Validation>
+                <Field Class="mb-1">
+                    <FieldLabel >String</FieldLabel>
+                    <FieldBody >
+                        <TextEdit @bind-Text="formFields.Field1" Size="Size.Small" Placeholder="Some text value..." >
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                        </TextEdit>
+                    </FieldBody>
+                </Field>
+                </Validation>
+                <Validation>
+                <Field Class="mb-1">
+                    <FieldLabel >String</FieldLabel>
+                    <FieldBody >
+                        <TextEdit @bind-Text="formFields.Field2" Size="Size.Small" Placeholder="Some text value...">
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                        </TextEdit>
+                    </FieldBody>
+                </Field>
+                </Validation>
+                <Validation>
+                <Field  Class="mb-1">
+                    <FieldLabel >Date</FieldLabel>
+                    <FieldBody >
+                        <DateEdit @bind-Date="formFields.Field3" TValue="DateTime?" Size="Size.Small">
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                        </DateEdit>
+                    </FieldBody>
+                </Field>
+                </Validation>
+                <Validation>
+                <Field  Class="mb-1">
+                    <FieldLabel >Numeric</FieldLabel>
+                    <FieldBody >
+                        <NumericEdit @bind-Value="formFields.Field4" Size="Size.Small" Placeholder="Some Numeric value...">
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                        </NumericEdit>
+                    </FieldBody>
+                </Field>
+                </Validation>
+                <Validation>
+                <Field  Class="mb-1">
+                    <FieldLabel >String</FieldLabel>
+                    <FieldBody >
+                        <TextEdit @bind-Text="formFields.Field5" Size="Size.Small" Placeholder="Some text value...">
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                        </TextEdit>
+                    </FieldBody>
+                </Field>
+                </Validation>
+                <Validation>
+                <Field  Class="mb-1">
+                    <FieldLabel >String</FieldLabel>
+                    <FieldBody >
+                        <TextEdit @bind-Text="formFields.Field6" Size="Size.Small" Placeholder="Some text value...">
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                        </TextEdit>
+                    </FieldBody>
+                </Field>
+                </Validation>
+                <Validation>
+                <Field  Class="mb-1">
+                    <FieldLabel >Numeric</FieldLabel>
+                    <FieldBody >
+                        <NumericEdit @bind-Value="formFields.Field7" Size="Size.Small" Placeholder="Some Numeric value...">
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                        </NumericEdit>
+                    </FieldBody>
+                </Field>
+                </Validation>
+                <Validation>
+                <Field  Class="mb-1">
+                    <FieldLabel >Numeric</FieldLabel>
+                    <FieldBody >
+                        <NumericEdit @bind-Value="formFields.Field8" Size="Size.Small" Placeholder="Some Numeric value...">
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                        </NumericEdit>
+                    </FieldBody>
+                </Field>
+                </Validation>
+                <Validation>
+                <Field  Class="mb-1">
+                    <FieldLabel >Numeric</FieldLabel>
+                    <FieldBody >
+                        <NumericEdit @bind-Value="formFields.Field9" Size="Size.Small" Placeholder="Some Numeric value...">
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                        </NumericEdit>
+                    </FieldBody>
+                </Field>
+                </Validation>
+                <Validation>
+                <Field  Class="mb-1">
+                    <FieldLabel >Numeric</FieldLabel>
+                    <FieldBody >
+                        <NumericEdit @bind-Value="formFields.Field10" Size="Size.Small" Placeholder="Some Numeric value...">
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                        </NumericEdit>
+                    </FieldBody>
+                </Field>
+                </Validation>
+                <Validation>
+                    <Div Class="mt-2 mb-3">
+                        <RadioGroup TValue="string" @bind-CheckedValue="formFields.Field11" Name="options" Class="d-flex flex-row">
+                        <Div Class="me-4">
+                            <Radio Value="@("option1")">Option 1</Radio>
+                        </Div>
+                        <Div>
+                            <Radio Value="@("option2")">Option 2</Radio>
+                        </Div>
+                        </RadioGroup>
+                        <ValidationError /> 
+                    </Div>
+                 
+                </Validation>
+                <Button Color="Color.Primary" Clicked="submit" Type="ButtonType.Submit">Submit</Button>
+            </Validations>
+        </CardText>
+    </CardBody>
+</Card>
+
+
+
+
+@code{
+    public FormFields formFields { get; set; } = new FormFields();
+    public Validations form { get; set; } = new Validations();
+
+    private async Task submit()
+    {
+        if((await form.ValidateAll()))
+        {
+            //show modal
+            //modalRef.Show();
+            //Post data
+            //await http.PostAsJsonAsync("post method url", formFields);
+        }
+    }
+}
