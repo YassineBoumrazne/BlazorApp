@@ -1,4 +1,5 @@
 ﻿@page "/table"
+@layout LayoutNav
 
 @inject IApplicationService applicationSercice
 
@@ -21,13 +22,107 @@
     <DataGridNumericColumn Field="@nameof( FormFields.Field9 )" Caption="Field9" />
     <DataGridNumericColumn Field="@nameof( FormFields.Field10 )" Caption="Field10" />
     <DataGridColumn Field="@nameof( FormFields.Field11 )" Caption="Field11" />
-    <DataGridCommandColumn NewCommandAllowed="false" />
+    <DataGridCommandColumn NewCommandAllowed="false">
+        <EditCommandTemplate>
+            <Button Color="Color.Primary" Class="me-2" Clicked="@(()=>Edit(context.Item))">Edit</Button>
+        </EditCommandTemplate>
+        <DeleteCommandTemplate>
+            <Button Color="Color.Danger" Clicked="@(context.Clicked)">@context.LocalizationString</Button>
+        </DeleteCommandTemplate>
+    </DataGridCommandColumn>
 </DataGrid>
-@code{
 
+<Modal @bind-Visible="@modalVisible">
+    <ModalContent Centered>
+        <ModalHeader>
+            <ModalTitle>Item edit</ModalTitle>
+            <CloseButton Clicked="CancelEdit"/>
+        </ModalHeader>
+        <ModalBody>
+            <Validations Mode="ValidationMode.Auto" @ref="form" ValidateOnLoad="false" Model="FormFieldsBeforeEdit">
+                <Validation>
+                    <Field Class="mb-1">
+                    <FieldLabel>Field1</FieldLabel>
+                    <FieldBody >
+                        <TextEdit @bind-Text="FormFieldsBeforeEdit.Field1" Size="Size.Small">
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                        </TextEdit>
+                    </FieldBody>
+                    </Field>
+                </Validation>
+                <Validation>
+                    <Field Class="mb-1">
+                    <FieldLabel >Field2</FieldLabel>
+                    <FieldBody >
+                        <TextEdit @bind-Text="FormFieldsBeforeEdit.Field2" Size="Size.Small">
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                        </TextEdit>
+                    </FieldBody>
+                    </Field>
+                </Validation>
+               <Validation>
+                <Field  Class="mb-1">
+                    <FieldLabel >Date</FieldLabel>
+                    <FieldBody >
+                        <DateEdit @bind-Date="FormFieldsBeforeEdit.Field3" TValue="DateOnly?" Size="Size.Small">
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                        </DateEdit>
+                    </FieldBody>
+                </Field>
+                </Validation>
+            </Validations>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Secondary" Clicked="@CancelEdit">Close</Button>
+            <Button Color="Color.Primary" Clicked="@SaveEdit">Save Changes</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+@code{
+    private bool modalVisible = false;
+    public FormFields FormFieldsToEdit { get; set; } = new FormFields();
+    public FormFields FormFieldsBeforeEdit { get; set; } = new FormFields();
+    public Validations form { get; set; } = new Validations();
 
     protected override async Task OnInitializedAsync()
     {
         await applicationSercice.GetFormFiledsData();
+    }
+
+    private Task Edit(FormFields formFields)
+    {
+        FormFieldsToEdit = formFields;
+        FormFieldsBeforeEdit.Field1 = formFields.Field1;
+        FormFieldsBeforeEdit.Field2 = formFields.Field2;
+        FormFieldsBeforeEdit.Field3 = formFields.Field3;
+        modalVisible = true;
+        return Task.CompletedTask;
+    }
+
+    private async Task SaveEdit()
+    {
+        if((await form.ValidateAll()))
+        {
+            modalVisible = false;
+            FormFieldsToEdit.Field1 = FormFieldsBeforeEdit.Field1;
+            FormFieldsToEdit.Field2 = FormFieldsBeforeEdit.Field2;
+            FormFieldsToEdit.Field3 = FormFieldsBeforeEdit.Field3;
+        }
+    }
+
+    private Task CancelEdit()
+    {
+        form.ClearAll();
+        modalVisible = false;
+        FormFieldsBeforeEdit = new FormFields();
+        FormFieldsToEdit = new FormFields();
+        return Task.CompletedTask;
     }
 }
