@@ -16,7 +16,7 @@ namespace BlazorApp.Shared
         public string Field2 { get; set; }
 
         [Required]
-        public DateTime? Field3 { get; set; }
+        public DateOnly? Field3 { get; set; }
 
         [Required]
         public int Field4 { get; set; }

@@ -1,0 +1,64 @@
+﻿@page "/login"
+
+@inject AuthenticationStateProvider authProvider
+@inject IApplicationService applicationService
+@inject ISessionStorageService sessionStorage
+@inject NavigationManager navigation
+
+<Div Style="width:100%;height:100vh;" Class="d-flex justify-content-center align-items-center">
+    <Card Margin="Margin.Is4.OnY" Style="width:500px;min-height:250px;">
+    <CardBody>
+        <CardTitle Size="5" Class="mb-3 text-center">Login</CardTitle>
+        <CardText>
+            <Validations Mode="ValidationMode.Auto" @ref="form" ValidateOnLoad="false" Model="loginDTO">
+                <Validation>
+                    <Field Class="mb-1">
+                    <FieldLabel>Email</FieldLabel>
+                    <FieldBody >
+                        <TextEdit @bind-Text="loginDTO.Email" Size="Size.Small" Placeholder="Email" >
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                        </TextEdit>
+                    </FieldBody>
+                    </Field>
+                </Validation>
+                <Validation>
+                    <Field Class="mb-1">
+                    <FieldLabel >Password</FieldLabel>
+                    <FieldBody >
+                        <TextEdit @bind-Text="loginDTO.Password" Size="Size.Small" Placeholder="Password" Role="TextRole.Password">
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                        </TextEdit>
+                    </FieldBody>
+                    </Field>
+                </Validation>
+            </Validations>
+        </CardText>
+        <Button Color="Color.Primary" Class="mt-3" Clicked="SubmitLogin" Type="ButtonType.Submit">Login</Button>
+    </CardBody>
+</Card>
+</Div>
+
+
+
+@code {
+    public LoginDTO loginDTO { get; set; } = new LoginDTO();
+    public Validations form { get; set; } = new Validations();
+
+    private async Task SubmitLogin()
+    {
+        if ((await form.ValidateAll()))
+        {
+            string res = await applicationService.login(loginDTO);
+            if (res!=null)
+            {
+                await sessionStorage.SetItemAsync<string>("token", res);
+                await authProvider.GetAuthenticationStateAsync();
+                navigation.NavigateTo("/table");
+            }
+        }
+    }
+}

@@ -1,0 +1,33 @@
+﻿@page "/table"
+
+@inject IApplicationService applicationSercice
+
+@attribute [Authorize]
+
+
+<DataGrid TItem="FormFields"
+          Data="@applicationSercice.formFieldsList"
+          Responsive
+          Editable
+          UseValidation Striped Class="my-5">
+    <DataGridColumn Field="@nameof( FormFields.Field1 )" Caption="Field1" Editable />
+    <DataGridColumn Field="@nameof( FormFields.Field2 )" Caption="Field2" Editable />
+    <DataGridDateColumn Field="@nameof( FormFields.Field3)" Caption="Field3" Editable />
+    <DataGridNumericColumn Field="@nameof( FormFields.Field4 )" Caption="Field4" />
+    <DataGridColumn Field="@nameof( FormFields.Field5 )" Caption="Field5" />
+    <DataGridColumn Field="@nameof( FormFields.Field6 )" Caption="Field6" />
+    <DataGridNumericColumn Field="@nameof( FormFields.Field7 )" Caption="Field7" />
+    <DataGridNumericColumn Field="@nameof( FormFields.Field8 )" Caption="Field8" />
+    <DataGridNumericColumn Field="@nameof( FormFields.Field9 )" Caption="Field9" />
+    <DataGridNumericColumn Field="@nameof( FormFields.Field10 )" Caption="Field10" />
+    <DataGridColumn Field="@nameof( FormFields.Field11 )" Caption="Field11" />
+    <DataGridCommandColumn NewCommandAllowed="false" />
+</DataGrid>
+@code{
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await applicationSercice.GetFormFiledsData();
+    }
+}

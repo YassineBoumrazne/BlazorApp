@@ -1,15 +1,32 @@
-﻿@page "/"
-
-@inject HttpClient http
-
-<PageTitle>Index</PageTitle>
+﻿ @page "/edit"
+ 
+ @inject HttpClient http
 
 <Card Margin="Margin.Is4.OnY" Shadow="Shadow.Small">
     <CardBody>
         <CardTitle Size="5">Form title</CardTitle>
         <CardText>
             <Validations Mode="ValidationMode.Auto" @ref="form" ValidateOnLoad="false" Model="formFields">
-                <Validation>
+
+
+<Steps SelectedStep="@selectedStep" SelectedStepChanged="@OnSelectedStepChanged">
+    <Items>
+        <Step Name="step1">Requster Information</Step>
+        <Step Name="step2">Orgnzation Information</Step>
+        <Step Name="step3">Assest Information</Step>
+        <Step Name="step4">
+            <Marker>
+                <Icon Name="IconName.Flag" />
+            </Marker>
+            <Caption>
+                Finish
+            </Caption>
+        </Step>
+    </Items>
+    <Content>
+
+        <StepPanel Name="step1">
+                 <Validation>
                 <Field Class="mb-1">
                     <FieldLabel >String</FieldLabel>
                     <FieldBody >
@@ -21,7 +38,8 @@
                     </FieldBody>
                 </Field>
                 </Validation>
-                <Validation>
+
+                    <Validation>
                 <Field Class="mb-1">
                     <FieldLabel >String</FieldLabel>
                     <FieldBody >
@@ -33,11 +51,15 @@
                     </FieldBody>
                 </Field>
                 </Validation>
-                <Validation>
+                <Button Color="Color.Primary" Class="mt-2" Clicked="@(()=>selectedStep="step2")">Next</Button>
+        </StepPanel>
+
+        <StepPanel Name="step2">
+               <Validation>
                 <Field  Class="mb-1">
                     <FieldLabel >Date</FieldLabel>
                     <FieldBody >
-                        <DateEdit @bind-Date="formFields.Field3" TValue="DateTime?" Size="Size.Small">
+                        <DateEdit @bind-Date="formFields.Field3" TValue="DateOnly?" Size="Size.Small">
                         <Feedback>
                             <ValidationError />
                         </Feedback>
@@ -57,7 +79,11 @@
                     </FieldBody>
                 </Field>
                 </Validation>
-                <Validation>
+                <Button Color="Color.Primary" Class="mt-2" Clicked="@(()=>selectedStep="step1")">Back</Button>
+                <Button Color="Color.Primary" Class="mt-2" Clicked="@(()=>selectedStep="step3")">Next</Button>
+        </StepPanel>
+        <StepPanel Name="step3">
+              <Validation>
                 <Field  Class="mb-1">
                     <FieldLabel >String</FieldLabel>
                     <FieldBody >
@@ -93,43 +119,11 @@
                     </FieldBody>
                 </Field>
                 </Validation>
-                <Validation>
-                <Field  Class="mb-1">
-                    <FieldLabel >Numeric</FieldLabel>
-                    <FieldBody >
-                        <NumericEdit @bind-Value="formFields.Field8" Size="Size.Small" Placeholder="Some Numeric value...">
-                        <Feedback>
-                            <ValidationError />
-                        </Feedback>
-                        </NumericEdit>
-                    </FieldBody>
-                </Field>
-                </Validation>
-                <Validation>
-                <Field  Class="mb-1">
-                    <FieldLabel >Numeric</FieldLabel>
-                    <FieldBody >
-                        <NumericEdit @bind-Value="formFields.Field9" Size="Size.Small" Placeholder="Some Numeric value...">
-                        <Feedback>
-                            <ValidationError />
-                        </Feedback>
-                        </NumericEdit>
-                    </FieldBody>
-                </Field>
-                </Validation>
-                <Validation>
-                <Field  Class="mb-1">
-                    <FieldLabel >Numeric</FieldLabel>
-                    <FieldBody >
-                        <NumericEdit @bind-Value="formFields.Field10" Size="Size.Small" Placeholder="Some Numeric value...">
-                        <Feedback>
-                            <ValidationError />
-                        </Feedback>
-                        </NumericEdit>
-                    </FieldBody>
-                </Field>
-                </Validation>
-                <Validation>
+                <Button Color="Color.Primary" Class="mt-2" Clicked="@(()=>selectedStep="step2")">Back</Button>
+                <Button Color="Color.Primary" Class="mt-2" Clicked="@(()=>selectedStep="step4")">Next</Button>
+        </StepPanel>
+        <StepPanel Name="step4">
+               <Validation>
                     <Div Class="mt-2 mb-3">
                         <RadioGroup TValue="string" @bind-CheckedValue="formFields.Field11" Name="options" Class="d-flex flex-row">
                         <Div Class="me-4">
@@ -143,8 +137,18 @@
                     </Div>
                  
                 </Validation>
+                <Button Color="Color.Primary" Clicked="@(()=>selectedStep="step3")">Back</Button>
                 <Button Color="Color.Primary" Clicked="submit" Type="ButtonType.Submit">Submit</Button>
+
+        </StepPanel>
+    </Content>
+</Steps>
+
+           
+            
+
             </Validations>
+
         </CardText>
     </CardBody>
 </Card>
@@ -152,7 +156,9 @@
 
 
 
+
 @code{
+
     public FormFields formFields { get; set; } = new FormFields();
     public Validations form { get; set; } = new Validations();
 
@@ -164,6 +170,15 @@
             //modalRef.Show();
             //Post data
             //await http.PostAsJsonAsync("post method url", formFields);
+            Console.WriteLine("date");
         }
+    }
+    string selectedStep = "step1";
+
+    private Task OnSelectedStepChanged( string name )
+    {
+        selectedStep = name;
+
+        return Task.CompletedTask;
     }
 }
