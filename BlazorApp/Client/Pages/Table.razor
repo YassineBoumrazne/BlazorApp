@@ -2,6 +2,7 @@
 @layout LayoutNav
 
 @inject IApplicationService applicationSercice
+@inject HttpClient http
 
 @attribute [Authorize]
 
@@ -114,6 +115,7 @@
             FormFieldsToEdit.Field1 = FormFieldsBeforeEdit.Field1;
             FormFieldsToEdit.Field2 = FormFieldsBeforeEdit.Field2;
             FormFieldsToEdit.Field3 = FormFieldsBeforeEdit.Field3;
+            await http.PostAsJsonAsync("Api/assessment", FormFieldsBeforeEdit);
         }
     }
 
