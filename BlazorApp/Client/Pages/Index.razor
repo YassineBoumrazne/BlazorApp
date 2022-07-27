@@ -52,7 +52,7 @@
                                 </Validation>
                                 <Div Class="col">
                                     <Button Color="Color.Primary" Class="mt-2" Clicked="@(()=>selectedStep="step2")">Next</Button>
-                                    <BlazorInputFile.InputFile OnChange="@OnChanged" />
+                                    <BlazorInputFile.InputFile OnChange="@OnChanged" accept=".xls,.xlsx" />
                                     @if (file != null)
                                     {
                                         <p>File: @file.Name</p>
