@@ -1,10 +1,8 @@
 ﻿ @page "/edit"
  
- @using System.IO
-@using System.Net.Http.Headers
-@using BlazorInputFile
- @inject HttpClient http
-  @inject IJSRuntime JSRuntime
+
+@inject HttpClient http
+@inject IJSRuntime JSRuntime
 
 <Card Margin="Margin.Is4.OnY" Shadow="Shadow.Small">
     <CardBody>
@@ -184,9 +182,9 @@
             }
             
         }
-        catch ( Exception exc )
+        catch
         {
-            Console.WriteLine( exc.Message );
+            
         }
     }
 
