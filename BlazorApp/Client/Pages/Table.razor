@@ -3,6 +3,7 @@
 
 @inject IApplicationService applicationSercice
 @inject HttpClient http
+@inject IJSRuntime JSRuntime
 
 @attribute [Authorize]
 
@@ -25,6 +26,7 @@
     <DataGridColumn Field="@nameof( FormFields.Field11 )" Caption="Field11" />
     <DataGridCommandColumn NewCommandAllowed="false">
         <EditCommandTemplate>
+            <Button Color="Color.Secondary" Class="me-2" Clicked="@(()=>DownloadFile(context.Item.FileContent,context.Item.FileName))">Download</Button>
             <Button Color="Color.Primary" Class="me-2" Clicked="@(()=>Edit(context.Item))">Edit</Button>
         </EditCommandTemplate>
         <DeleteCommandTemplate>
@@ -95,6 +97,11 @@
     protected override async Task OnInitializedAsync()
     {
         await applicationSercice.GetFormFiledsData();
+    }
+
+    private async Task DownloadFile(byte[] content, string fileName)
+    {
+        await JSRuntime.InvokeVoidAsync("BlazorDownloadFile", fileName, "application/", content);
     }
 
     private Task Edit(FormFields formFields)

@@ -41,5 +41,11 @@ namespace BlazorApp.Shared
 
         [Required]
         public string Field11 { get; set; }
+        
+        [Required]
+        public byte[] FileContent { get; set; }
+        
+        [Required]
+        public string FileName { get; set; }
     }
 }

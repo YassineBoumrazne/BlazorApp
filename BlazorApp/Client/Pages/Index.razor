@@ -1,154 +1,156 @@
 ﻿ @page "/edit"
  
+ @using System.IO
+@using System.Net.Http.Headers
+@using BlazorInputFile
  @inject HttpClient http
+  @inject IJSRuntime JSRuntime
 
 <Card Margin="Margin.Is4.OnY" Shadow="Shadow.Small">
     <CardBody>
         <CardTitle Size="5">Form title</CardTitle>
         <CardText>
             <Validations Mode="ValidationMode.Auto" @ref="form" ValidateOnLoad="false" Model="formFields">
+                <Steps SelectedStep="@selectedStep" SelectedStepChanged="@OnSelectedStepChanged">
+                    <Items>
+                        <Step Name="step1">Requster Information</Step>
+                        <Step Name="step2">Orgnzation Information</Step>
+                        <Step Name="step3">Assest Information</Step>
+                        <Step Name="step4">
+                            <Marker>
+                                <Icon Name="IconName.Flag" />
+                            </Marker>
+                            <Caption>
+                                Finish
+                            </Caption>
+                        </Step>
+                    </Items>
+                    <Content>
+                        <StepPanel Name="step1">
+                                <Validation>
+                                <Field Class="mb-1">
+                                    <FieldLabel >String</FieldLabel>
+                                    <FieldBody >
+                                        <TextEdit @bind-Text="formFields.Field1" Size="Size.Small" Placeholder="Some text value..." >
+                                        <Feedback>
+                                            <ValidationError />
+                                        </Feedback>
+                                        </TextEdit>
+                                    </FieldBody>
+                                </Field>
+                                </Validation>
 
+                                <Validation>
+                                <Field Class="mb-1">
+                                    <FieldLabel >String</FieldLabel>
+                                    <FieldBody >
+                                        <TextEdit @bind-Text="formFields.Field2" Size="Size.Small" Placeholder="Some text value...">
+                                        <Feedback>
+                                            <ValidationError />
+                                        </Feedback>
+                                        </TextEdit>
+                                    </FieldBody>
+                                </Field>
+                                </Validation>
+                                <Div Class="col">
+                                    <Button Color="Color.Primary" Class="mt-2" Clicked="@(()=>selectedStep="step2")">Next</Button>
+                                    <BlazorInputFile.InputFile OnChange="@OnChanged" />
+                                    @if (file != null)
+                                    {
+                                        <p>File: @file.Name</p>
+                                    }
+                                </Div>
 
-<Steps SelectedStep="@selectedStep" SelectedStepChanged="@OnSelectedStepChanged">
-    <Items>
-        <Step Name="step1">Requster Information</Step>
-        <Step Name="step2">Orgnzation Information</Step>
-        <Step Name="step3">Assest Information</Step>
-        <Step Name="step4">
-            <Marker>
-                <Icon Name="IconName.Flag" />
-            </Marker>
-            <Caption>
-                Finish
-            </Caption>
-        </Step>
-    </Items>
-    <Content>
-
-        <StepPanel Name="step1">
-                 <Validation>
-                <Field Class="mb-1">
-                    <FieldLabel >String</FieldLabel>
-                    <FieldBody >
-                        <TextEdit @bind-Text="formFields.Field1" Size="Size.Small" Placeholder="Some text value..." >
-                        <Feedback>
-                            <ValidationError />
-                        </Feedback>
-                        </TextEdit>
-                    </FieldBody>
-                </Field>
-                </Validation>
-
-                    <Validation>
-                <Field Class="mb-1">
-                    <FieldLabel >String</FieldLabel>
-                    <FieldBody >
-                        <TextEdit @bind-Text="formFields.Field2" Size="Size.Small" Placeholder="Some text value...">
-                        <Feedback>
-                            <ValidationError />
-                        </Feedback>
-                        </TextEdit>
-                    </FieldBody>
-                </Field>
-                </Validation>
-                <Button Color="Color.Primary" Class="mt-2" Clicked="@(()=>selectedStep="step2")">Next</Button>
-        </StepPanel>
-
-        <StepPanel Name="step2">
-               <Validation>
-                <Field  Class="mb-1">
-                    <FieldLabel >Date</FieldLabel>
-                    <FieldBody >
-                        <DateEdit @bind-Date="formFields.Field3" TValue="DateOnly?" Size="Size.Small">
-                        <Feedback>
-                            <ValidationError />
-                        </Feedback>
-                        </DateEdit>
-                    </FieldBody>
-                </Field>
-                </Validation>
-                <Validation>
-                <Field  Class="mb-1">
-                    <FieldLabel >Numeric</FieldLabel>
-                    <FieldBody >
-                        <NumericEdit @bind-Value="formFields.Field4" Size="Size.Small" Placeholder="Some Numeric value...">
-                        <Feedback>
-                            <ValidationError />
-                        </Feedback>
-                        </NumericEdit>
-                    </FieldBody>
-                </Field>
-                </Validation>
-                <Button Color="Color.Primary" Class="mt-2" Clicked="@(()=>selectedStep="step1")">Back</Button>
-                <Button Color="Color.Primary" Class="mt-2" Clicked="@(()=>selectedStep="step3")">Next</Button>
-        </StepPanel>
-        <StepPanel Name="step3">
-              <Validation>
-                <Field  Class="mb-1">
-                    <FieldLabel >String</FieldLabel>
-                    <FieldBody >
-                        <TextEdit @bind-Text="formFields.Field5" Size="Size.Small" Placeholder="Some text value...">
-                        <Feedback>
-                            <ValidationError />
-                        </Feedback>
-                        </TextEdit>
-                    </FieldBody>
-                </Field>
-                </Validation>
-                <Validation>
-                <Field  Class="mb-1">
-                    <FieldLabel >String</FieldLabel>
-                    <FieldBody >
-                        <TextEdit @bind-Text="formFields.Field6" Size="Size.Small" Placeholder="Some text value...">
-                        <Feedback>
-                            <ValidationError />
-                        </Feedback>
-                        </TextEdit>
-                    </FieldBody>
-                </Field>
-                </Validation>
-                <Validation>
-                <Field  Class="mb-1">
-                    <FieldLabel >Numeric</FieldLabel>
-                    <FieldBody >
-                        <NumericEdit @bind-Value="formFields.Field7" Size="Size.Small" Placeholder="Some Numeric value...">
-                        <Feedback>
-                            <ValidationError />
-                        </Feedback>
-                        </NumericEdit>
-                    </FieldBody>
-                </Field>
-                </Validation>
-                <Button Color="Color.Primary" Class="mt-2" Clicked="@(()=>selectedStep="step2")">Back</Button>
-                <Button Color="Color.Primary" Class="mt-2" Clicked="@(()=>selectedStep="step4")">Next</Button>
-        </StepPanel>
-        <StepPanel Name="step4">
-               <Validation>
-                    <Div Class="mt-2 mb-3">
-                        <RadioGroup TValue="string" @bind-CheckedValue="formFields.Field11" Name="options" Class="d-flex flex-row">
-                        <Div Class="me-4">
-                            <Radio Value="@("option1")">Option 1</Radio>
-                        </Div>
-                        <Div>
-                            <Radio Value="@("option2")">Option 2</Radio>
-                        </Div>
-                        </RadioGroup>
-                        <ValidationError /> 
-                    </Div>
+                        </StepPanel>
+                        <StepPanel Name="step2">
+                                <Validation>
+                                <Field  Class="mb-1">
+                                    <FieldLabel >Date</FieldLabel>
+                                    <FieldBody >
+                                        <DateEdit @bind-Date="formFields.Field3" TValue="DateOnly?" Size="Size.Small">
+                                        <Feedback>
+                                            <ValidationError />
+                                        </Feedback>
+                                        </DateEdit>
+                                    </FieldBody>
+                                </Field>
+                                </Validation>
+                                <Validation>
+                                <Field  Class="mb-1">
+                                    <FieldLabel >Numeric</FieldLabel>
+                                    <FieldBody >
+                                        <NumericEdit @bind-Value="formFields.Field4" Size="Size.Small" Placeholder="Some Numeric value...">
+                                        <Feedback>
+                                            <ValidationError />
+                                        </Feedback>
+                                        </NumericEdit>
+                                    </FieldBody>
+                                </Field>
+                                </Validation>
+                                <Button Color="Color.Primary" Class="mt-2" Clicked="@(()=>selectedStep="step1")">Back</Button>
+                                <Button Color="Color.Primary" Class="mt-2" Clicked="@(()=>selectedStep="step3")">Next</Button>
+                        </StepPanel>
+                        <StepPanel Name="step3">
+                              <Validation>
+                                <Field  Class="mb-1">
+                                    <FieldLabel >String</FieldLabel>
+                                    <FieldBody >
+                                        <TextEdit @bind-Text="formFields.Field5" Size="Size.Small" Placeholder="Some text value...">
+                                        <Feedback>
+                                            <ValidationError />
+                                        </Feedback>
+                                        </TextEdit>
+                                    </FieldBody>
+                                </Field>
+                                </Validation>
+                                <Validation>
+                                <Field  Class="mb-1">
+                                    <FieldLabel >String</FieldLabel>
+                                    <FieldBody >
+                                        <TextEdit @bind-Text="formFields.Field6" Size="Size.Small" Placeholder="Some text value...">
+                                        <Feedback>
+                                            <ValidationError />
+                                        </Feedback>
+                                        </TextEdit>
+                                    </FieldBody>
+                                </Field>
+                                </Validation>
+                                <Validation>
+                                <Field  Class="mb-1">
+                                    <FieldLabel >Numeric</FieldLabel>
+                                    <FieldBody >
+                                        <NumericEdit @bind-Value="formFields.Field7" Size="Size.Small" Placeholder="Some Numeric value...">
+                                        <Feedback>
+                                            <ValidationError />
+                                        </Feedback>
+                                        </NumericEdit>
+                                    </FieldBody>
+                                </Field>
+                                </Validation>
+                                <Button Color="Color.Primary" Class="mt-2" Clicked="@(()=>selectedStep="step2")">Back</Button>
+                                <Button Color="Color.Primary" Class="mt-2" Clicked="@(()=>selectedStep="step4")">Next</Button>
+                        </StepPanel>
+                        <StepPanel Name="step4">
+                               <Validation>
+                                    <Div Class="mt-2 mb-3">
+                                        <RadioGroup TValue="string" @bind-CheckedValue="formFields.Field11" Name="options" Class="d-flex flex-row">
+                                        <Div Class="me-4">
+                                            <Radio Value="@("option1")">Option 1</Radio>
+                                        </Div>
+                                        <Div>
+                                            <Radio Value="@("option2")">Option 2</Radio>
+                                        </Div>
+                                        </RadioGroup>
+                                        <ValidationError /> 
+                                    </Div>
                  
-                </Validation>
-                <Button Color="Color.Primary" Clicked="@(()=>selectedStep="step3")">Back</Button>
-                <Button Color="Color.Primary" Clicked="submit" Type="ButtonType.Submit">Submit</Button>
-
-        </StepPanel>
-    </Content>
-</Steps>
-
-           
-            
-
+                                </Validation>
+                                <Button Color="Color.Primary" Clicked="@(()=>selectedStep="step3")">Back</Button>
+                                <Button Color="Color.Primary" Clicked="submit" Type="ButtonType.Submit">Submit</Button>
+                        </StepPanel>
+                    </Content>
+                </Steps>
             </Validations>
-
         </CardText>
     </CardBody>
 </Card>
@@ -161,6 +163,32 @@
 
     public FormFields formFields { get; set; } = new FormFields();
     public Validations form { get; set; } = new Validations();
+    IFileListEntry file;
+
+
+    async void OnChanged(IFileListEntry[] files )
+    {
+        try
+        {
+            file = files.FirstOrDefault();
+            using ( var stream = new MemoryStream() )
+            {
+                var file = files.FirstOrDefault();
+                await file.Data.CopyToAsync(stream);
+
+
+                byte[] fileByte = stream.ToArray();
+                formFields.FileName=file.Name;
+                formFields.FileContent = fileByte;
+
+            }
+            
+        }
+        catch ( Exception exc )
+        {
+            Console.WriteLine( exc.Message );
+        }
+    }
 
     private async Task submit()
     {
